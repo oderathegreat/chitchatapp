@@ -90,6 +90,23 @@ export default App() => {
       socket.emit("join room", name,room_value);
     };
 
+    const handleSend = e => {
+      e.preventDefault();
+      const input = document.querySelector('#m');
+      if(input.value.trim() !== ''){
+        socket.emit('chat message',input.value,room);
+        input.value = '';
+      }
+    }
+
+    const logOut = () => {
+      socket.disconnect();
+      setOnline(draft=>[]);
+      setMessages(draft=>[]);
+      setId('');
+      socket.connect();
+    }
+
 
 
   return (
