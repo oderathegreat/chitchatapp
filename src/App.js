@@ -9,6 +9,17 @@ import { useOnlineStatus } from '@withvoid/melting-pot';
 import useClippy from 'use-clippy';
 
 
+const Messages = props => { 
+  const [ clipboard, setClipboard ] = useClippy();
+
+  return props.data.map(m => m[0] !== '' ? 
+(<li><strong>{m[0]}</strong> :<a onClick={()=>{setClipboard(`${m[1]}`)}} href="#"><i style={{float:'right',color:'black'}} class=" material-icons">content_copy</i></a> <div className="innermsg">{m[1]}</div></li>) 
+: (<li className="update">{m[1]}</li>) ); 
+}
+
+const Online = props => props.data.map(m => <li id={m[0]}>{m[1]}</li>)
+
+
 function App() {
 
   const [data, setData] = useLocalStorage('storage_id', default_value);
