@@ -56,8 +56,39 @@ export default App() => {
       draft.push(['',message]);
     }))
 
+    socket.on('people-list',people => {
+      let newState = [];
+      for(let person in people){
+        newState.push([people[person].id,people[person].nick]);
+      }
+      setOnline(draft=>{draft.push(...newState)});
+    });
+
+    socket.on('add-person',(nick,id)=>{
+      setOnline(draft => {
+        draft.push([id,nick])
+      })
+    })
+
+    socket.on('add-person',(nick,id)=>{
+      setOnline(draft => {
+        draft.push([id,nick])
+      })
+    })
 
 
+    const handleSubmit = e => {
+      e.preventDefault();
+      const name = document.querySelector('#name').value.trim();
+      const room_value = document.querySelector('#room').value.trim();
+      console.log(name);
+      if (!name) {
+        return alert("User name can't be empty");
+      }
+      setId(name);
+      setRoom(room_value);
+      socket.emit("join room", name,room_value);
+    };
 
 
 
