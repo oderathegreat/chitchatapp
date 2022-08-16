@@ -20,18 +20,44 @@ const Messages = props => {
 const Online = props => props.data.map(m => <li id={m[0]}>{m[1]}</li>)
 
 
-function App() {
+export default App() => {
 
   const [data, setData] = useLocalStorage('storage_id', default_value);
   const [room, setRoom] = useLocalStorage('room','');
  const [id, setId] = useLocalStorage('id','');
 
+ const [socket] = useSocket('https://open-chat-naostsaecf.now.sh');
+
+  const [messages, setMessages] = useImmer([]);
+
+  const [onlineList, setOnline] = useImmer([]);
+
 //check if user is online
-const [onlineList, setOnline] = useImmer([]);
-const { online } = useOnlineStatus();
+
+  const { online } = useOnlineStatus();
+  const { width } = useWindowSize();
 
 
-const { width } = useWindowSize();
+
+  useEffect(()=>{
+    socket.connect();
+
+    if(id){
+      socket.emit('join',id,room);
+    }
+
+    socket.on('message que',(nick,message) => {
+      setMessages(draft => {
+        draft.push([nick,message])
+      })
+    });
+
+    socket.on('update',message => setMessages(draft => {
+      draft.push(['',message]);
+    }))
+
+
+
 
 
 
